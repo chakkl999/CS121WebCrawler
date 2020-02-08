@@ -90,16 +90,17 @@ def is_valid(url):
                 robottxt[parsed.netloc] = robot
             # logger.info("Matches the top domain.")
             if robot.can_fetch("IR F19 63226723", url):
-                if not re.match(
+                if re.match(
                         r".*\.(css|js|bmp|gif|jpe?g|ico"
                         + r"|png|tiff?|mid|mp2|mp3|mp4"
-                        + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+                        + r"|wav|avi|mov|mpe?g|ram|m4v|mkv|ogg|ogv|pdf"
                         + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z)$", parsed.path.lower()) and not \
-                        re.match(
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py)$", parsed.path.lower()):
+                    return False
+                if re.match(
                         r".*/(css|js|bmp|gif|jpe?g|ico"
                         + r"|png|tiff?|mid|mp2|mp3|mp4"
                         + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -107,9 +108,10 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb).*", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb)/", parsed.path.lower()):
                     # logger.info("Yes")
-                    return True
+                    return False
+                return True
         return False
     except TypeError:
         print("TypeError for ", parsed)
