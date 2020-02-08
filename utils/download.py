@@ -9,13 +9,13 @@ def download(url, config, logger=None):
     try:
         resp = requests.get(
             f"http://{host}:{port}/",
-            params=[("q", f"{url}"), ("u", f"{config.user_agent}")], timeout=10)
+            params=[("q", f"{url}"), ("u", f"{config.user_agent}")], timeout=5)
     except requests.exceptions.Timeout:
         print(f"{url} took too long to response.")
-        resp = None
+        return None
     except Exception as e:
         print(f"Unknown exception: {e}")
-        resp = None
+        return None
     if resp:
         return Response(cbor.loads(resp.content))
     logger.error(f"Spacetime Response error {resp} with url {url}.")

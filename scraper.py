@@ -1,76 +1,121 @@
 import re
 from urllib.parse import urlparse
+from urllib.robotparser import RobotFileParser
 import hashlib
 from bs4 import BeautifulSoup, Comment, Doctype
 import requests
 import json
 import pathlib
+import time
+from utils import get_logger
 
-global fingerPrints
 fingerPrints = {}
+robottxt = {}
+urlindex = 1
+logger = get_logger(f"Scraper: ", "Scraper")
 
 def scraper(url, resp):
-    if resp.status_code != requests.codes.ok:
-        print(f"{url} returns an status code {resp.status_code}")
+    if resp.status != requests.codes.ok:
+        print(f"Error: {url} returns an status code {resp.status}")
         return []
-    global fingerPrints
+    global fingerPrints, logger
+    # logger.info(f"Parsing {url}")
     links = extract_next_links(url, resp)
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     text = []
-    for s in soup.find_all("script"):
-        s.decompose()
+    cleanSoup(soup)
     for t in soup.find_all(text=True):
         if not isinstance(t, Comment) and not isinstance(t, Doctype) and removejunk(t):
             text.extend(tokenize(t))
     data = {}
+    data["id"] = url
     data["freq"] = computeWordFrequencies(text)
     data["fingerPrint"] = createFingerPrint(data["freq"])
     if url not in fingerPrints:
         for u, fp in fingerPrints.items():
             percent = compareFingerPrint(data["fingerPrint"], fp)
-            if(percent > 80):
-                print(f"{url} has the same content to other page(s), ignoring this page.")
+            if(percent > 90):
+                logger.info(f"{url} has the same content to other page(s), ignoring this page.")
                 fingerPrints[url] = data["fingerPrint"]
                 return []
         fingerPrints[url] = data["fingerPrint"]
     else:
-        print(f"{url} has the same content to other page(s), ignoring this page.")
+        logger.info(f"{url} has the same content to other page(s), ignoring this page.")
         return []
-    dumpdata(url, data)
+    dumpdata(data)
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
     # Implementation requred.
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     links = []
-    baseurl = re.match("(https?://.*?)/", url)
+    parsedurl = urlparse(url)
+    baseurl = parsedurl.scheme + "://" + parsedurl.netloc
+    # baseurl = re.match("(https?://.*?)/", url).group(1)
     for link in soup.find_all('a'):
         temp = link.get("href")
-        if temp not in links:
+        try:
             if re.match("//.+", temp):
-                links.add("https:" + temp)
+                temp = ("https:" + temp)
             elif re.match("/.+", temp):
-                links.add(baseurl+temp)
+                temp = (baseurl+temp)
+            re.sub("#.*", "", temp)
+            re.sub("\?replytocom=.*", "", temp)
+            if temp not in links:
+                links.append(temp)
+        except:
+            pass
     return links
 
 def is_valid(url):
+    global robottxt, logger
     try:
+        # logger.info(f"Is {url} valid?")
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if not re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico"
-            + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
-            return True
+        if re.match(".*(\.|/)(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu|today.uci.edu/department/information_computer_sciences)$",parsed.netloc):
+            robot = robottxt.get(parsed.netloc, None)
+            if not robot:
+                time.sleep(0.5)
+                robot = RobotFileParser()
+                # logger.info(parsed)
+                robot.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+                try:
+                    robot.read()
+                except IOError:
+                    pass
+                    # logger.info("Error")
+                robottxt[parsed.netloc] = robot
+            # logger.info("Matches the top domain.")
+            if robot.can_fetch("IR F19 63226723", url):
+                if not re.match(
+                        r".*\.(css|js|bmp|gif|jpe?g|ico"
+                        + r"|png|tiff?|mid|mp2|mp3|mp4"
+                        + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+                        + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+                        + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+                        + r"|epub|dll|cnf|tgz|sha1"
+                        + r"|thmx|mso|arff|rtf|jar|csv"
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) and not \
+                        re.match(
+                        r".*/(css|js|bmp|gif|jpe?g|ico"
+                        + r"|png|tiff?|mid|mp2|mp3|mp4"
+                        + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+                        + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+                        + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+                        + r"|epub|dll|cnf|tgz|sha1"
+                        + r"|thmx|mso|arff|rtf|jar|csv"
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz).*", parsed.path.lower()):
+                    # logger.info("Yes")
+                    return True
+        return False
     except TypeError:
-        print ("TypeError for ", parsed)
+        print("TypeError for ", parsed)
         raise
+    except Exception as e:
+        pass
+        # logger.info(f"Error: {e}")
     return False
 
 def createFingerPrint(frequency):
@@ -91,11 +136,7 @@ def createFingerPrint(frequency):
 
 def compareFingerPrint(f1, f2):
     similarity = bin(f1 ^ f2)[2:]
-    num = 0
-    for bit in similarity:
-        if bit == '0':
-            num += 1
-    return int(num/128 * 100)
+    return int(similarity.count('0') / 128 * 100)
 
 def computeWordFrequencies(tokens: list) -> dict:
     freq = {}
@@ -117,7 +158,7 @@ def computeWordFrequencies(tokens: list) -> dict:
                 toRemove.append(key)
     for r in toRemove:
         freq.pop(r, None)
-    freq = sorted(freq.items(), key=lambda f: (-f[1], f[0]), reverse=True)[::-1]
+    freq = dict(sorted(freq.items(), key = lambda f: (-f[1], f[0])))
     return freq
 
 def tokenize(text):
@@ -135,9 +176,22 @@ def removejunk(text: str):
         return False
     return True
 
-def dumpdata(url, data):
+def dumpdata(data):
+    urlindex = hashlib.md5(data["id"].encode()).hexdigest()
     pathlib.Path("output").mkdir(parents=True, exist_ok=True)
-    pathlib.Path("output/"+url).touch(exist_ok=True)
-    with open("output/"+url, "w") as f:
-        data["id"] = url
+    pathlib.Path("output/"+urlindex+".txt").touch(exist_ok=True)
+    with open("output/"+urlindex+".txt", "w") as f:
         json.dump(data, f)
+    urlindex += 1
+
+def cleanSoup(soup):
+    for s in soup.find_all("script"):
+        s.decompose()
+    for sidebar in soup.find_all("div", class_="grid_4 omega sidebar"):
+        sidebar.decompose()
+    for comment in soup.find_all("a", href="#"):
+        comment.decompose()
+    for f in soup.find_all("footer"):
+        f.decompose()
+    for login in soup.find_all(attrs={"id": (re.compile("login"), re.compile("fancybox"))}):
+        login.decompose()
