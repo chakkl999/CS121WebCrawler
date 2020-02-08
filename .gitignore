@@ -30,6 +30,9 @@ MANIFEST
 __pycache__/
 output/
 Testing.py
+frontier.shelve.bak
+frontier.shelve.dat
+frontier.shelve.dir
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
