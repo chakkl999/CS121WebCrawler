@@ -16,7 +16,7 @@ logger = get_logger(f"Scraper: ", "Scraper")
 
 def scraper(url, resp):
     if resp.status != requests.codes.ok:
-        print(f"Error: {url} returns an status code {resp.status}")
+#        print(f"Error: {url} returns an status code {resp.status}")
         return []
     global fingerPrints, logger
     # logger.info(f"Parsing {url}")
@@ -35,12 +35,13 @@ def scraper(url, resp):
         for u, fp in fingerPrints.items():
             percent = compareFingerPrint(data["fingerPrint"], fp)
             if(percent > 90):
-                logger.info(f"{url} has the same content to other page(s), ignoring this page.")
+                logger.info(f"{url} has the similar content to other page(s). I'm not sure whether to keep the data for this page or not.")
                 fingerPrints[url] = data["fingerPrint"]
+                dumpdata(data)
                 return []
         fingerPrints[url] = data["fingerPrint"]
     else:
-        logger.info(f"{url} has the same content to other page(s), ignoring this page.")
+        logger.info(f"{url} has already been scrapped.")
         return []
     dumpdata(data)
     return [link for link in links if is_valid(link)]
@@ -59,8 +60,8 @@ def extract_next_links(url, resp):
                 temp = ("https:" + temp)
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
-            re.sub("#.*", "", temp)
-            re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*)", "", temp)
+            temp = re.sub("#.*", "", temp)
+            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:
@@ -97,7 +98,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb)$", parsed.path.lower()) and not \
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war)$", parsed.path.lower()) and not \
                         re.match(
                         r".*/(css|js|bmp|gif|jpe?g|ico"
                         + r"|png|tiff?|mid|mp2|mp3|mp4"
