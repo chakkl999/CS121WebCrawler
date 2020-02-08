@@ -60,7 +60,7 @@ def extract_next_links(url, resp):
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
             re.sub("#.*", "", temp)
-            re.sub("\?replytocom=.*", "", temp)
+            re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:

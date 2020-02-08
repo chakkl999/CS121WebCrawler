@@ -11,10 +11,10 @@ def download(url, config, logger=None):
             f"http://{host}:{port}/",
             params=[("q", f"{url}"), ("u", f"{config.user_agent}")], timeout=5)
     except requests.exceptions.Timeout:
-        print(f"{url} took too long to response.")
+        logger.info(f"{url} took too long to response.")
         return None
     except Exception as e:
-        print(f"Unknown exception: {e}")
+        logger.error(f"Unknown exception: {e}")
         return None
     if resp:
         return Response(cbor.loads(resp.content))
