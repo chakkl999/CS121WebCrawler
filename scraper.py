@@ -182,7 +182,6 @@ def dumpdata(data):
     pathlib.Path("output/"+urlindex+".txt").touch(exist_ok=True)
     with open("output/"+urlindex+".txt", "w") as f:
         json.dump(data, f)
-    urlindex += 1
 
 def cleanSoup(soup):
     for s in soup.find_all("script"):
