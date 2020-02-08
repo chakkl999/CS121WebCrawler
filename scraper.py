@@ -35,11 +35,16 @@ def scraper(url, resp):
     data["id"] = url
     data["freq"] = computeWordFrequencies(text)
     data["fingerPrint"] = createFingerPrint(data["freq"])
+    if not data["freq"]:
+        logger.info(f"{url} is empty, page data is kept but will not be counted.")
+        fingerPrints[url] = data["fingerPrint"]
+        dumpdata(data)
+        return []
     if url not in fingerPrints:
         for u, fp in fingerPrints.items():
             percent = compareFingerPrint(data["fingerPrint"], fp)
             if(percent > 90):
-                logger.info(f"{url} has the similar content to other page(s). I'm not sure whether to keep the data for this page or not.")
+                logger.info(f"{url} has the similar content to other page(s).")
                 fingerPrints[url] = data["fingerPrint"]
                 dumpdata(data)
                 return []
@@ -142,6 +147,8 @@ def createFingerPrint(frequency):
     return fingerprint
 
 def compareFingerPrint(f1, f2):
+    if f2 == 0:
+        return 0
     similarity = bin(f1 ^ f2)[2:]
     return int(similarity.count('0') / 128 * 100)
 
