@@ -10,6 +10,10 @@ import time
 from utils import get_logger
 
 fingerPrints = {}
+for file in pathlib.Path("output").glob("*.txt"):
+    with open(file, 'r') as f:
+        data = json.load(f)
+        fingerPrints[data["id"]] = data["fingerPrint"]
 robottxt = {}
 urlindex = 1
 logger = get_logger(f"Scraper: ", "Scraper")
