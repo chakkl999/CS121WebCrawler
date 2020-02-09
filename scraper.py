@@ -217,8 +217,8 @@ def cleanSoup(soup):
         s.decompose()
     for sidebar in soup.find_all("div", class_="grid_4 omega sidebar"):
         sidebar.decompose()
-    for comment in soup.find_all("a", href="#"):
-        comment.decompose()
+    for fragment in soup.find_all("a", href="#"):
+        fragment.decompose()
     for f in soup.find_all("footer"):
         f.decompose()
     for login in soup.find_all(attrs={"id": (re.compile("login"), re.compile("fancybox"))}):
