@@ -17,15 +17,15 @@ def main(config_file, restart):
     crawler = Crawler(config, restart)
     crawler.start()
 
-# def countDomain(domain: dict, url):
-#     for d in domain.keys():
-#         if(re.match(d+"$", url)): #exact match, same domain, count it as a unique page
-#             domain[d][0] += 1
-#             return
-#         elif(re.match(".+\."+d+"$", url)): #near match, subdomain, need to check the subdomain also
-#             return countDomain(domain[d][1], url)
-#     domain[url] = [1, {}] #if it doesn't match with any domain, it means it's a new domain, add it to the dict
-#     return
+def countDomain(domain: dict, url):
+    for d in domain.keys():
+        if(re.match(d+"$", url)): #exact match, same domain, count it as a unique page
+            domain[d][0] += 1
+            return
+        elif(re.match(".+\."+d+"$", url)): #near match, subdomain, need to check the subdomain also
+            return countDomain(domain[d][1], url)
+    domain[url] = [1, {}] #if it doesn't match with any domain, it means it's a new domain, add it to the dict
+    return
 
 def countUniquePages(domain: dict):
     unique = 0
@@ -35,18 +35,18 @@ def countUniquePages(domain: dict):
             unique += subvalue[0]
     return unique
 
-def countDomain(domain: dict, url):
-    for d in domain.keys():
-        if re.match(d, url):
-            domain[d][0] += 1
-            return
-        elif re.match(".+\." + d + "$", url):
-            if url in domain[d][1]:
-                domain[d][1][url][0] += 1
-            else:
-                domain[d][1][url] = [1, {}]
-            return
-    domain[url] = [1, {}] #if it doesn't match with any domain, it means it's a new domain, add it to the dict, shouldn't happen but ill put it here
+# def countDomain(domain: dict, url):
+#     for d in domain.keys():
+#         if re.match(d, url):
+#             domain[d][0] += 1
+#             return
+#         elif re.match(".+\." + d + "$", url):
+#             if url in domain[d][1]:
+#                 domain[d][1][url][0] += 1
+#             else:
+#                 domain[d][1][url] = [1, {}]
+#             return
+#     domain[url] = [1, {}] #if it doesn't match with any domain, it means it's a new domain, add it to the dict, shouldn't happen but ill put it here
 
 def sortDomain(domain: dict):
     if not domain:
