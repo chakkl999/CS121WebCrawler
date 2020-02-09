@@ -35,19 +35,6 @@ def countUniquePages(domain: dict):
             unique += subvalue[0]
     return unique
 
-# def countDomain(domain: dict, url):
-#     for d in domain.keys():
-#         if re.match(d, url):
-#             domain[d][0] += 1
-#             return
-#         elif re.match(".+\." + d + "$", url):
-#             if url in domain[d][1]:
-#                 domain[d][1][url][0] += 1
-#             else:
-#                 domain[d][1][url] = [1, {}]
-#             return
-#     domain[url] = [1, {}] #if it doesn't match with any domain, it means it's a new domain, add it to the dict, shouldn't happen but ill put it here
-
 def sortDomain(domain: dict):
     if not domain:
         return {}
@@ -63,7 +50,7 @@ def isnum(text: str):
     return any(i.isnumeric() for i in text)
 
 def outputResult():
-    print("Calculating result...")
+    print("Calculating result...", end="")
     domain = {"ics.uci.edu": [1, {}], "cs.uci.edu": [1, {}], "informatics.uci.edu": [1, {}], "stat.uci.edu": [1, {}],
               "today.uci.edu/department/information_computer_sciences": [1, {}]}
     commonWords = {}
@@ -85,7 +72,9 @@ def outputResult():
                 if currentNumWords > maxNumWords:
                     longestPage = data["id"]
                     maxNumWords = currentNumWords
+    print(" ...", end="")
     domain = sortDomain(domain)
+    print(" ...")
     unique = countUniquePages(domain)
     print(f"There are {unique} unique pages found.")
     print(f"Longest page: {longestPage} -> {maxNumWords} words.")
