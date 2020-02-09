@@ -28,11 +28,13 @@ def countDomain(domain: dict, url):
     return
 
 def countUniquePages(domain: dict):
+    if not domain:
+        return 0
     unique = 0
     for value in domain.values():
         unique += value[0]
         for subvalue in value[1].values():
-            unique += subvalue[0]
+            unique += countUniquePages(subvalue[1])
     return unique
 
 def sortDomain(domain: dict):
