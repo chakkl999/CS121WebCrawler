@@ -68,7 +68,7 @@ def outputResult():
     for file in pathlib.Path("output").glob("*.txt"):
         with open(file, "r") as f:
             data = json.load(f)
-            if data["unique"] == 1:
+            if data.get("unique", 1) == 1:
                 url = re.sub("^www.", "", urlparse(data["id"]).netloc)
                 countDomain(domain, url)
                 currentNumWords = 0
