@@ -79,7 +79,6 @@ def outputResult():
     print(f"There are {unique} unique pages found.")
     print(f"Longest page: {longestPage} -> {maxNumWords} words.")
     limit = 0
-    print("Common words: ")
     stopWords = {"a", "about", "above", "after", "against", "again", "all", "am", "an", "and", "any", "are", "aren't",
                  "t", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
                  "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't",
@@ -95,9 +94,10 @@ def outputResult():
                  "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's",
                  "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you",
                  "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"}
+    print("Common words: ")
     for word in sorted(commonWords.items(), key=lambda f: (-f[1], f[0]), reverse=True)[::-1]:
         if len(word[0]) > 2 and not isnum(word[0]) and word[0] not in stopWords:
-            print(f"{word[0]} -> {word[1]}")
+            print(f"{limit}. {word[0]} -> {word[1]}")
             limit += 1
         if limit > 50:
             break
