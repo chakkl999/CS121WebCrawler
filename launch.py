@@ -59,6 +59,9 @@ def outputSubDomain(domain: dict):
     for key, value in domain.items():
         print(f"{key}, {value[0]}")
 
+def isnum(text: str):
+    return any(i.isnumeric() for i in text)
+
 def outputResult():
     print("Calculating result...")
     domain = {"ics.uci.edu": [1, {}], "cs.uci.edu": [1, {}], "informatics.uci.edu": [1, {}], "stat.uci.edu": [1, {}],
@@ -81,15 +84,30 @@ def outputResult():
                         commonWords[key] = value
                 if currentNumWords > maxNumWords:
                     longestPage = data["id"]
+                    maxNumWords = currentNumWords
     domain = sortDomain(domain)
     unique = countUniquePages(domain)
     print(f"There are {unique} unique pages found.")
     print(f"Longest page: {longestPage} -> {maxNumWords} words.")
     limit = 0
     print("Common words: ")
-    stopWords = {}
+    stopWords = {"a", "about", "above", "after", "against", "again", "all", "am", "an", "and", "any", "are", "aren't",
+                 "t", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
+                 "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't",
+                 "down", "during", "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't", "have",
+                 "haven't", "having", "he'd", "he'll", "he's", "d", "ll", "s", "her", "here", "here's", "hers",
+                 "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "m", "ve", "if",
+                 "in", "into", "is", "isn't", "it", "it's", "its", "itself", "let's", "me", "more", "most", "more",
+                 "mustn't", "my", "myself", "no", "nor", "not", "of", "off", "once", "only", "or", "other", "ought",
+                 "our", "ours", "ourselves", "out", "over", "own", "same", "shan't", "she", "she'd", "she'll", "she's",
+                 "should", "shouldn't", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them",
+                 "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've",
+                 "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't", "we", "we'd",
+                 "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's",
+                 "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you",
+                 "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"}
     for word in sorted(commonWords.items(), key=lambda f: (-f[1], f[0]), reverse=True)[::-1]:
-        if word[0] not in stopWords and not word[0].isnumeric():
+        if len(word[0]) > 2 and not isnum(word[0]) and word[0] not in stopWords:
             print(f"{word[0]} -> {word[1]}")
             limit += 1
         if limit > 50:

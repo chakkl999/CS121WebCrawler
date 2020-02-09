@@ -190,11 +190,11 @@ def computeWordFrequencies(tokens: list) -> dict:
     freq = dict(sorted(freq.items(), key = lambda f: (-f[1], f[0])))
     return freq
 
-def tokenize(text):
+def tokenize(text: str):
     leading = re.compile("^[^a-zA-Z0-9]*")
     trailing = re.compile("[^a-zA-Z0-9]*$")
-    spliting = re.compile("[^a-zA-Z0-9]")
-    return list(filter(None, spliting.split(leading.sub("", trailing.sub("", text)))))
+    spliting = re.compile("[^a-zA-Z0-9']")
+    return list(filter(None, spliting.split(leading.sub("", trailing.sub("", text.lower())))))
 
 def removejunk(text: str):
     if(text.strip() == ''):
