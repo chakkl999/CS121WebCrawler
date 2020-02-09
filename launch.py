@@ -50,7 +50,7 @@ def isnum(text: str):
     return any(i.isnumeric() for i in text)
 
 def outputResult():
-    print("Calculating result...", end="")
+    print("Calculating result...")
     domain = {"ics.uci.edu": [1, {}], "cs.uci.edu": [1, {}], "informatics.uci.edu": [1, {}], "stat.uci.edu": [1, {}],
               "today.uci.edu/department/information_computer_sciences": [1, {}]}
     commonWords = {}
@@ -72,9 +72,9 @@ def outputResult():
                 if currentNumWords > maxNumWords:
                     longestPage = data["id"]
                     maxNumWords = currentNumWords
-    print(" ...", end="")
+    print("...")
     domain = sortDomain(domain)
-    print(" ...")
+    print("...")
     unique = countUniquePages(domain)
     print(f"There are {unique} unique pages found.")
     print(f"Longest page: {longestPage} -> {maxNumWords} words.")
