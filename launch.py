@@ -56,10 +56,11 @@ def sortDomain(domain: dict):
     return dict(sorted(domain.items()))
 
 def outputSubDomain(domain: dict):
-    for key, value in domain:
+    for key, value in domain.items():
         print(f"{key}, {value[0]}")
 
 def outputResult():
+    print("Calculating result...")
     domain = {"ics.uci.edu": [1, {}], "cs.uci.edu": [1, {}], "informatics.uci.edu": [1, {}], "stat.uci.edu": [1, {}],
               "today.uci.edu/department/information_computer_sciences": [1, {}]}
     commonWords = {}
