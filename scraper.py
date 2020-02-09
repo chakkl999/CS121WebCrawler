@@ -19,33 +19,37 @@ urlindex = 1
 logger = get_logger(f"Scraper: ", "Scraper")
 
 def scraper(url, resp):
+    global fingerPrints, logger
     if resp.status != requests.codes.ok:
+        logger.info(f"{url} returned a status code {resp.status}")
 #        print(f"Error: {url} returns an status code {resp.status}")
         return []
-    global fingerPrints, logger
     # logger.info(f"Parsing {url}")
-    links = extract_next_links(url, resp)
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-    text = []
-    cleanSoup(soup)
-    for t in soup.find_all(text=True):
-        if not isinstance(t, Comment) and not isinstance(t, Doctype) and removejunk(t):
-            text.extend(tokenize(t))
-    data = {}
-    data["id"] = url
-    data["freq"] = computeWordFrequencies(text)
-    data["fingerPrint"] = createFingerPrint(data["freq"])
-    if not data["freq"]:
-        logger.info(f"{url} is empty, page data is kept but will not be counted.")
-        fingerPrints[url] = data["fingerPrint"]
-        dumpdata(data)
-        return []
     if url not in fingerPrints:
+        links = extract_next_links(url, resp)
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+        text = []
+        cleanSoup(soup)
+        for t in soup.find_all(text=True):
+            if not isinstance(t, Comment) and not isinstance(t, Doctype) and removejunk(t):
+                text.extend(tokenize(t))
+        data = {}
+        data["unique"] = 1
+        data["id"] = url
+        data["freq"] = computeWordFrequencies(text)
+        data["fingerPrint"] = createFingerPrint(data["freq"])
+        if not data["freq"]:
+            logger.info(f"{url} is empty, data will kept but will not be counted.")
+            fingerPrints[url] = data["fingerPrint"]
+            fingerPrints["unique"] = 0
+            dumpdata(data)
+            return []
         for u, fp in fingerPrints.items():
             percent = compareFingerPrint(data["fingerPrint"], fp)
             if(percent > 90):
-                logger.info(f"{url} has the similar content to other page(s).")
+                logger.info(f"{url} has similar content to other page(s), data will be kept but will not be counted.")
                 fingerPrints[url] = data["fingerPrint"]
+                fingerPrints["unique"] = 0
                 dumpdata(data)
                 return []
         fingerPrints[url] = data["fingerPrint"]
@@ -107,7 +111,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py)$", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.path.lower()):
                     return False
                 if re.match(
                         r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -117,7 +121,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py)$", parsed.query.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.query.lower()):
                     return False
                 if re.match(
                         r".*/(css|js|bmp|gif|jpe?g|ico"
