@@ -8,6 +8,8 @@ import json
 import pathlib
 import time
 from utils import get_logger
+from utils.response import Response
+import cbor
 
 fingerPrints = {}
 for file in pathlib.Path("output").glob("*.txt"):
@@ -93,14 +95,25 @@ def is_valid(url):
             robot = robottxt.get(parsed.netloc, None)
             if not robot:
                 time.sleep(0.5)
+                try:
+                    resp = Response(cbor.loads(requests.get(
+                        "http://styx.ics.uci.edu:9002/",
+                        params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5)))
+                except requests.exceptions.Timeout:
+                    logger.info(f"{url} took too long to response.")
+                    return None
+                except Exception as e:
+                    logger.error(f"Unknown exception: {e}")
+                    return None
                 robot = RobotFileParser()
                 # logger.info(parsed)
-                robot.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
-                try:
-                    robot.read()
-                except IOError:
-                    pass
+                # robot.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+                # try:
+                #     robot.read()
+                # except IOError:
+                #     pass
                     # logger.info("Error")
+                robot.parse(resp.raw_response.content.split("\n"))
                 robottxt[parsed.netloc] = robot
             # logger.info("Matches the top domain.")
             if robot.can_fetch("IR F19 63226723", url):

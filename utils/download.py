@@ -6,6 +6,7 @@ from utils.response import Response
 
 def download(url, config, logger=None):
     host, port = config.cache_server
+    print("PORT: " + str(port))
     try:
         resp = requests.get(
             f"http://{host}:{port}/",
