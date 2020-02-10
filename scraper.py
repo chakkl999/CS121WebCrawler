@@ -29,7 +29,7 @@ def scraper(url, resp):
         return []
     # logger.info(f"Parsing {url}")
     if url not in fingerPrints:
-        soup = BeautifulSoup(resp.raw_response.content.decode(), "html.parser")
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
         links = extract_next_links(url, soup)
         text = []
         cleanSoup(soup)
@@ -108,7 +108,11 @@ def is_valid(url):
                 if resp.status != 200:
                     resp = ""
                 robot = RobotFileParser()
-                robot.parse(resp.raw_response.content.decode().split("\n"))
+                try:
+                    robot.parse(resp.raw_response.content.decode().split("\n"))
+                except Exception as e:
+                    logger.info(f"Robot failed to parse txt: {e}")
+                    robot.parse("")
                 robottxt[parsed.netloc] = robot
             if robot.can_fetch("IR F19 63226723", url):
                 if re.match(
