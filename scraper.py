@@ -86,7 +86,6 @@ def extract_next_links(url, soup):
 def is_valid(url):
     global robottxt, logger
     try:
-        # logger.info(f"Is {url} valid?")
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
@@ -99,22 +98,14 @@ def is_valid(url):
                         "http://styx.ics.uci.edu:9002/",
                         params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5).content))
                 except requests.exceptions.Timeout:
-                    logger.info(f"{url} took too long to response.")
+                    logger.info(f"{parsed.scheme + '://' + parsed.netloc + '/robots.txt'} took too long to response.")
                     resp = ""
                 except Exception as e:
                     logger.error(f"Unknown exception in robots.txt: {e}")
                     resp = ""
                 robot = RobotFileParser()
-                # logger.info(parsed)
-                # robot.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
-                # try:
-                #     robot.read()
-                # except IOError:
-                #     pass
-                    # logger.info("Error")
                 robot.parse(resp.raw_response.content.decode().split("\n"))
                 robottxt[parsed.netloc] = robot
-            # logger.info("Matches the top domain.")
             if robot.can_fetch("IR F19 63226723", url):
                 if re.match(
                         r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -145,16 +136,15 @@ def is_valid(url):
                         + r"|epub|dll|cnf|tgz|sha1|raw-attachment"
                         + r"|thmx|mso|arff|rtf|jar|csv|~eppstein/pix"
                         + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb)/", parsed.path.lower()):
-                    # logger.info("Yes")
                     return False
                 return True
+            logger.info(f"{url} cannot be scrape according to robots.txt")
         return False
     except TypeError:
         print("TypeError for ", parsed)
         raise
     except Exception as e:
         pass
-        # logger.info(f"Error: {e}")
     return False
 
 def createFingerPrint(frequency):
