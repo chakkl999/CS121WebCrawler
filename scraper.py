@@ -105,6 +105,8 @@ def is_valid(url):
                 except Exception as e:
                     logger.error(f"Unknown exception in robots.txt: {e}")
                     resp = ""
+                if resp.status != 200:
+                    resp = ""
                 robot = RobotFileParser()
                 robot.parse(resp.raw_response.content.decode().split("\n"))
                 robottxt[parsed.netloc] = robot
