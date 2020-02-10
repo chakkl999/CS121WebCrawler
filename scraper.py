@@ -98,7 +98,7 @@ def is_valid(url):
                 try:
                     resp = Response(cbor.loads(requests.get(
                         "http://styx.ics.uci.edu:9002/",
-                        params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5)))
+                        params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5).content))
                 except requests.exceptions.Timeout:
                     logger.info(f"{url} took too long to response.")
                     resp = ""
