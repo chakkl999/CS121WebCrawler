@@ -76,7 +76,7 @@ def extract_next_links(url, soup):
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
             temp = re.sub("#.*", "", temp)
-            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*)", "", temp)
+            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:
@@ -112,6 +112,7 @@ def is_valid(url):
                     robot.parse(resp.raw_response.content.decode().split("\n"))
                 except Exception as e:
                     logger.info(f"Robot failed to parse txt: {e}")
+                    logger.info("Should be fine since I made the resp to be a str if robots.txt doesn't exist.")
                     robot.parse("")
                 robottxt[parsed.netloc] = robot
             if robot.can_fetch("IR F19 63226723", url):
