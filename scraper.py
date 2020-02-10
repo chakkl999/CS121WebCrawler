@@ -101,10 +101,10 @@ def is_valid(url):
                         params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5)))
                 except requests.exceptions.Timeout:
                     logger.info(f"{url} took too long to response.")
-                    return None
+                    resp = ""
                 except Exception as e:
-                    logger.error(f"Unknown exception: {e}")
-                    return None
+                    logger.error(f"Unknown exception in robots.txt: {e}")
+                    resp = ""
                 robot = RobotFileParser()
                 # logger.info(parsed)
                 # robot.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
