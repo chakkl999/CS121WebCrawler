@@ -85,6 +85,8 @@ def extract_next_links(url, soup):
 
 def is_valid(url):
     global robottxt, logger
+    if not url:
+        return False
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
