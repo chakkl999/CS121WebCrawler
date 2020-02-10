@@ -29,8 +29,8 @@ def scraper(url, resp):
         return []
     # logger.info(f"Parsing {url}")
     if url not in fingerPrints:
-        links = extract_next_links(url, resp)
-        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+        soup = BeautifulSoup(resp.raw_response.content.decode(), "html.parser")
+        links = extract_next_links(url, soup)
         text = []
         cleanSoup(soup)
         for t in soup.find_all(text=True):
@@ -62,9 +62,8 @@ def scraper(url, resp):
     dumpdata(data)
     return [link for link in links if is_valid(link)]
 
-def extract_next_links(url, resp):
+def extract_next_links(url, soup):
     # Implementation requred.
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     links = []
     parsedurl = urlparse(url)
     baseurl = parsedurl.scheme + "://" + parsedurl.netloc
@@ -113,7 +112,7 @@ def is_valid(url):
                 # except IOError:
                 #     pass
                     # logger.info("Error")
-                robot.parse(resp.raw_response.content.split("\n"))
+                robot.parse(resp.raw_response.content.decode().split("\n"))
                 robottxt[parsed.netloc] = robot
             # logger.info("Matches the top domain.")
             if robot.can_fetch("IR F19 63226723", url):
