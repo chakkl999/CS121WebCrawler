@@ -111,8 +111,8 @@ def is_valid(url):
                 try:
                     robot.parse(resp.raw_response.content.decode().split("\n"))
                 except Exception as e:
-                    logger.info(f"Robot failed to parse txt: {e}")
-                    logger.info("Should be fine since I made the resp to be a str if robots.txt doesn't exist.")
+                    # logger.info(f"Robot failed to parse txt: {e}")
+                    # logger.info("Should be fine since I made the resp to be a str if robots.txt doesn't exist.")
                     robot.parse("")
                 robottxt[parsed.netloc] = robot
             if robot.can_fetch("IR F19 63226723", url):
@@ -162,14 +162,14 @@ def createFingerPrint(frequency):
     for key, value in frequency.items():
         hash = int(hashlib.md5(key.encode("utf-8")).hexdigest(), 16)
         for i in range(size-1, -1, -1):
-            if((hash & (1 << i)) != 0):
+            if((hash & (1 << (size-1-i))) != 0):
                 v[i] += value
             else:
                 v[i] -= value
     fingerprint = 0
-    for i in range(size):
+    for i in range(size-1, -1, -1):
         if(v[i] > 0):
-            fingerprint = (fingerprint | (1 << i))
+            fingerprint = (fingerprint | (1 << (size-1-i)))
     return fingerprint
 
 def compareFingerPrint(f1, f2):
@@ -212,7 +212,7 @@ def removejunk(text: str):
         return False
     if re.match('["a-zA-Z0-9]*:["a-zA-Z0-9]*', text):
         return False
-    if re.match("<.*>|\[.*\]|{.*}", text):
+    if re.match("<.*>|\[.*\]|\{.*\}", text):
         return False
     return True
 
