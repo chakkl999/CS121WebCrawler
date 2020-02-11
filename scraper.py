@@ -124,7 +124,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.path.lower()):
                     return False
                 if re.match(
                         r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -134,7 +134,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.query.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.query.lower()):
                     return False
                 if re.match(
                         r".*/(css|js|bmp|gif|jpe?g|ico"
@@ -142,9 +142,9 @@ def is_valid(url):
                         + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
                         + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-                        + r"|epub|dll|cnf|tgz|sha1|raw-attachment"
+                        + r"|epub|dll|cnf|tgz|sha1|raw-attachment|zip-attachment|attachment"
                         + r"|thmx|mso|arff|rtf|jar|csv|~eppstein/pix"
-                        + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb|wp-content/emj/uploads)/", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|wp-content/emj/uploads)/", parsed.path.lower()):
                     return False
                 return True
             logger.info(f"{url} cannot be scrape according to robots.txt")

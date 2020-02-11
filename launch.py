@@ -102,7 +102,7 @@ def outputResult():
                  "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "img", "btn", "div", "px"}
     with open("output/result.txt", "w") as f:
         f.write(f"There are {unique} unique pages found.\n")
-        f.write(print(f"Longest page: {longestPage} -> {maxNumWords} words.\n"))
+        f.write(f"Longest page: {longestPage} -> {maxNumWords} words.\n")
         f.write("Common words:\n")
         print(f"There are {unique} unique pages found.")
         print(f"Longest page: {longestPage} -> {maxNumWords} words.")
