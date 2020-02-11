@@ -209,7 +209,10 @@ def tokenize(text: str):
     trailing = re.compile("[^a-zA-Z0-9]*$")
     spliting = re.compile("[^a-zA-Z0-9']")
     tokens = list(filter(None, spliting.split(leading.sub("", trailing.sub("", text.lower())))))
-    return [t for t in tokens if not t.endswith("'")]
+    for i in range(tokens):
+        if tokens[i].endswith("'"):
+            tokens[i] = tokens[i][:-1]
+    return tokens
 
 def removejunk(text: str):
     if(text.strip() == ''):
