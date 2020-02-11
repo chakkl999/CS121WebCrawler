@@ -62,20 +62,24 @@ def outputResult():
     longestPage = ""
     for file in pathlib.Path("output").glob("*.txt"):
         with open(file, "r") as f:
-            data = json.load(f)
-            if data.get("unique", 1) == 1:
-                url = re.sub("^www.", "", urlparse(data["id"]).netloc)
-                countDomain(domain, url)
-                currentNumWords = 0
-                for key, value in data["freq"].items():
-                    currentNumWords += value
-                    if key in commonWords:
-                        commonWords[key] += value
-                    else:
-                        commonWords[key] = value
-                if currentNumWords > maxNumWords:
-                    longestPage = data["id"]
-                    maxNumWords = currentNumWords
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                pass
+            else:
+                if data.get("unique", 1) == 1:
+                    url = re.sub("^www.", "", urlparse(data["id"]).netloc)
+                    countDomain(domain, url)
+                    currentNumWords = 0
+                    for key, value in data["freq"].items():
+                        currentNumWords += value
+                        if key in commonWords:
+                            commonWords[key] += value
+                        else:
+                            commonWords[key] = value
+                    if currentNumWords > maxNumWords:
+                        longestPage = data["id"]
+                        maxNumWords = currentNumWords
     print("...")
     domain = sortDomain(domain)
     print("...")
