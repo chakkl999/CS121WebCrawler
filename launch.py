@@ -64,6 +64,9 @@ def outputResult():
         with open(file, "r") as f:
             try:
                 data = json.load(f)
+            except json.decoder.JSONDecodeError:
+                pass
+            else:
                 if data.get("unique", 1) == 1:
                     url = re.sub("^www.", "", urlparse(data["id"]).netloc)
                     countDomain(domain, url)
@@ -77,8 +80,6 @@ def outputResult():
                     if currentNumWords > maxNumWords:
                         longestPage = data["id"]
                         maxNumWords = currentNumWords
-            except json.JSONDecodeError:
-                pass
     print("...")
     domain = sortDomain(domain)
     print("...")
