@@ -84,7 +84,7 @@ def outputResult():
     domain = sortDomain(domain)
     print("...")
     unique = countUniquePages(domain)
-    limit = 0
+    limit = 1
     stopWords = {"a", "about", "above", "after", "against", "again", "all", "am", "an", "and", "any", "are", "aren't",
                  "t", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
                  "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't",

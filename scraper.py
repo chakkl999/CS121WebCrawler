@@ -80,7 +80,7 @@ def extract_next_links(url, soup):
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
             temp = re.sub("#.*", "", temp)
-            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*)", "", temp)
+            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:
@@ -148,7 +148,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|raw-attachment|zip-attachment|attachment"
                         + r"|thmx|mso|arff|rtf|jar|csv|~eppstein/pix"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|wp-content/emj/uploads)/", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb)/", parsed.path.lower()):
                     return False
                 return True
             logger.info(f"{url} cannot be scrape according to robots.txt")
