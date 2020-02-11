@@ -144,7 +144,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|raw-attachment"
                         + r"|thmx|mso|arff|rtf|jar|csv|~eppstein/pix"
-                        + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb)/", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip-?|rar|gz|ipynb|wp-content/emj/uploads)/", parsed.path.lower()):
                     return False
                 return True
             logger.info(f"{url} cannot be scrape according to robots.txt")
@@ -181,7 +181,6 @@ def compareFingerPrint(f1, f2):
 def computeWordFrequencies(tokens: list) -> dict:
     freq = {}
     for token in tokens:
-        token = token.capitalize();
         if token in freq:
             freq[token] += 1
         else:
@@ -205,7 +204,8 @@ def tokenize(text: str):
     leading = re.compile("^[^a-zA-Z0-9]*")
     trailing = re.compile("[^a-zA-Z0-9]*$")
     spliting = re.compile("[^a-zA-Z0-9']")
-    return list(filter(None, spliting.split(leading.sub("", trailing.sub("", text.lower())))))
+    tokens = list(filter(None, spliting.split(leading.sub("", trailing.sub("", text.lower())))))
+    return [t for t in tokens if not t.endswith("'")]
 
 def removejunk(text: str):
     if(text.strip() == ''):

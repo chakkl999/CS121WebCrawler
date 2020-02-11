@@ -42,9 +42,13 @@ def sortDomain(domain: dict):
         domain[key][1] = sortDomain(value[1])
     return dict(sorted(domain.items()))
 
-def outputSubDomain(domain: dict):
-    for key, value in domain.items():
-        print(f"{key}, {value[0]}")
+def outputSubDomain(domain: dict, f = None):
+    if not f:
+        for key, value in domain.items():
+            print(f"{key}, {value[0]}")
+    else:
+        for key, value in domain.items():
+            f.write(f"{key}, {value[0]}\n")
 
 def isnum(text: str):
     return any(i.isnumeric() for i in text)
@@ -91,19 +95,28 @@ def outputResult():
                  "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't", "we", "we'd",
                  "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's",
                  "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you",
-                 "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"}
-    print(f"There are {unique} unique pages found.")
-    print(f"Longest page: {longestPage} -> {maxNumWords} words.")
-    print("Common words: ")
-    for word in sorted(commonWords.items(), key=lambda f: (-f[1], f[0]), reverse=True)[::-1]:
-        if len(word[0]) > 2 and not isnum(word[0]) and word[0] not in stopWords:
-            print(f"{limit}. {word[0]} -> {word[1]}")
-            limit += 1
-        if limit > 50:
-            break
-    print(f"Domain: ics.uci.edu has {domain['ics.uci.edu'][0]} unique page(s).")
-    print("Subdomain: ")
-    outputSubDomain(domain['ics.uci.edu'][1])
+                 "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "img", "btn", "div", "px"}
+    with open("output/result.txt", "w") as f:
+        f.write(f"There are {unique} unique pages found.\n")
+        f.write(print(f"Longest page: {longestPage} -> {maxNumWords} words.\n"))
+        f.write("Common words:\n")
+        print(f"There are {unique} unique pages found.")
+        print(f"Longest page: {longestPage} -> {maxNumWords} words.")
+        print("Common words: ")
+        for word in sorted(commonWords.items(), key=lambda f: (-f[1], f[0]), reverse=True)[::-1]:
+            if len(word[0]) > 2 and not isnum(word[0]) and word[0] not in stopWords:
+                print(f"{limit}. {word[0]} -> {word[1]}")
+                f.write(f"{limit}. {word[0]} -> {word[1]}\n")
+                limit += 1
+            if limit > 50:
+                break
+        f.write(f"Domain: ics.uci.edu has {domain['ics.uci.edu'][0]} unique page(s).\n")
+        f.write("Subdomain: \n")
+        print(f"Domain: ics.uci.edu has {domain['ics.uci.edu'][0]} unique page(s).")
+        print("Subdomain: ")
+        outputSubDomain(domain['ics.uci.edu'][1])
+        outputSubDomain(domain['ics.uci.edu'][1], f)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
