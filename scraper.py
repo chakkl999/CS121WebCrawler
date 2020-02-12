@@ -167,13 +167,13 @@ def createFingerPrint(frequency):
     v = [0] * size
     for key, value in frequency.items():
         hash = int(hashlib.md5(key.encode("utf-8")).hexdigest(), 16)
-        for i in range(size-1, -1, -1):
+        for i in range(size):
             if((hash & (1 << (size-1-i))) != 0):
                 v[i] += value
             else:
                 v[i] -= value
     fingerprint = 0
-    for i in range(size-1, -1, -1):
+    for i in range(size):
         if(v[i] > 0):
             fingerprint = (fingerprint | (1 << (size-1-i)))
     return fingerprint
