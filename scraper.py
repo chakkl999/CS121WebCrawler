@@ -21,7 +21,6 @@ for file in pathlib.Path("output").glob("*.txt"):
         else:
             fingerPrints[data["id"]] = data["fingerPrint"]
 robottxt = {}
-urlindex = 1
 logger = get_logger(f"Scraper: ", "Scraper")
 
 def scraper(url, resp):
@@ -104,10 +103,10 @@ def is_valid(url):
                         "http://styx.ics.uci.edu:9002/",
                         params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5).content))
                 except requests.exceptions.Timeout:
-                    logger.info(f"{parsed.scheme + '://' + parsed.netloc + '/robots.txt'} took too long to response.")
+                    # logger.info(f"{parsed.scheme + '://' + parsed.netloc + '/robots.txt'} took too long to response.")
                     resp = ""
                 except Exception as e:
-                    logger.error(f"Unknown exception in robots.txt: {e}")
+                    # logger.error(f"Unknown exception in robots.txt: {e}")
                     resp = ""
                 if resp.status != 200:
                     resp = ""
@@ -129,6 +128,7 @@ def is_valid(url):
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
                         + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.path.lower()):
+                    logger.info(f"{url} is not valid.")
                     return False
                 if re.match(
                         r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -139,6 +139,7 @@ def is_valid(url):
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
                         + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.query.lower()):
+                    logger.info(f"{url} is not valid.")
                     return False
                 if re.match(
                         r".*/(css|js|bmp|gif|jpe?g|ico"
@@ -149,6 +150,7 @@ def is_valid(url):
                         + r"|epub|dll|cnf|tgz|sha1|raw-attachment|zip-attachment|attachment"
                         + r"|thmx|mso|arff|rtf|jar|csv|~eppstein/pix"
                         + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb)/", parsed.path.lower()):
+                    logger.info(f"{url} is not valid.")
                     return False
                 return True
             logger.info(f"{url} cannot be scrape according to robots.txt")
