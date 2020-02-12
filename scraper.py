@@ -127,7 +127,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.path.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.z|eps.z|h|java|py|ppsx)$", parsed.path.lower()):
                     logger.info(f"{url} is not valid.")
                     return False
                 if re.match(
@@ -138,7 +138,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.Z|eps.Z|h|java|py|ppsx)$", parsed.query.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.z|eps.z|h|java|py|ppsx)$", parsed.query.lower()):
                     logger.info(f"{url} is not valid.")
                     return False
                 if re.match(
