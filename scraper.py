@@ -95,21 +95,11 @@ def is_valid(url):
             robot = robottxt.get(parsed.netloc, None)
             if not robot:
                 time.sleep(0.5)
-                try:
-                    resp = Response(cbor.loads(requests.get(
-                        "http://styx.ics.uci.edu:9002/",
-                        params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5).content))
-                except requests.exceptions.Timeout:
-                    resp = ""
-                except:
-                    resp = ""
-                if resp.status != 200:
-                    resp = ""
                 robot = RobotFileParser()
                 try:
-                    robot.parse(resp.raw_response.content.decode().split("\n"))
+                    robot.read(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
                 except:
-                    robot.parse("")
+                    pass
                 robottxt[parsed.netloc] = robot
             if robot.can_fetch("IR F19 63226723", url):
                 if re.match(
