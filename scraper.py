@@ -76,7 +76,7 @@ def extract_next_links(url, soup):
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
             temp = re.sub("#.*", "", temp)
-            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*|\?action=login.*|\?action=edit.*|\?action=refcount.*|\?action=source.*|\?action=diff.*)", "", temp)
+            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*|\?action=login.*|\?action=edit.*|\?action=refcount.*|\?action=source.*|\?action=diff.*|\?action=download.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:
@@ -121,7 +121,7 @@ def is_valid(url):
                         + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                         + r"|epub|dll|cnf|tgz|sha1|sql"
                         + r"|thmx|mso|arff|rtf|jar|csv"
-                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.z|eps.z|h|java|py|ppsx)$", parsed.query.lower()):
+                        + r"|rm|smil|wmv|swf|wma|zip|rar|gz|ipynb|war|ps.z|eps.z|h|java|py|ppsx|m|mat)$", parsed.query.lower()):
                     logger.info(f"{url} is not valid.")
                     return False
                 if re.match(

@@ -12,6 +12,7 @@ def download(url, config, logger=None):
             params=[("q", f"{url}"), ("u", f"{config.user_agent}")], timeout=5)
     except requests.exceptions.Timeout:
         logger.info(f"{url} took too long to response.")
+        return None
     except Exception as e:
         logger.error(f"Unknown exception: {e}")
     if resp:
