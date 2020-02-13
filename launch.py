@@ -121,8 +121,6 @@ def outputResult():
         print("Subdomain: ")
         outputSubDomain(domain['ics.uci.edu'][1])
         outputSubDomain(domain['ics.uci.edu'][1], f)
-    print(domain)
-
 
 if __name__ == "__main__":
     parser = ArgumentParser()
