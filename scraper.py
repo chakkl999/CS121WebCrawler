@@ -76,7 +76,7 @@ def extract_next_links(url, soup):
             elif re.match("/.+", temp):
                 temp = (baseurl+temp)
             temp = re.sub("#.*", "", temp)
-            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*|\?action=login.*|\?action=edit.*|\?action=refcount|\?action=source.*.*)", "", temp)
+            temp = re.sub("(\?replytocom=.*|\?share=.*|\?n=https.*|\?1=.*|\?c=https.*|\?do=diff.*|\?rev=.*|\?action=login.*|\?action=edit.*|\?action=refcount.*|\?action=source.*|\?action=diff.*)", "", temp)
             if temp not in links:
                 links.append(temp)
         except:
