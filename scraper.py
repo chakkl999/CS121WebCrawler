@@ -95,9 +95,9 @@ def is_valid(url):
             robot = robottxt.get(parsed.netloc, None)
             if not robot:
                 time.sleep(0.5)
-                robot = RobotFileParser()
+                robot = RobotFileParser(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
                 try:
-                    robot.read(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+                    robot.read()
                 except:
                     pass
                 robottxt[parsed.netloc] = robot
