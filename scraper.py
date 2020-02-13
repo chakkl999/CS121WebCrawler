@@ -28,9 +28,7 @@ def scraper(url, resp):
     if resp.status != requests.codes.ok:
         if resp.status >= 600:
             logger.info(f"{url} returned a status code {resp.status}")
-#        print(f"Error: {url} returns an status code {resp.status}")
         return []
-    # logger.info(f"Parsing {url}")
     if url not in fingerPrints:
         soup = BeautifulSoup(resp.raw_response.content, "html.parser")
         links = extract_next_links(url, soup)
@@ -70,7 +68,6 @@ def extract_next_links(url, soup):
     links = []
     parsedurl = urlparse(url)
     baseurl = parsedurl.scheme + "://" + parsedurl.netloc
-    # baseurl = re.match("(https?://.*?)/", url).group(1)
     for link in soup.find_all('a'):
         temp = link.get("href")
         try:
@@ -103,19 +100,15 @@ def is_valid(url):
                         "http://styx.ics.uci.edu:9002/",
                         params=[("q", parsed.scheme + "://" + parsed.netloc + "/robots.txt"), ("u", "IR F19 63226723")], timeout=5).content))
                 except requests.exceptions.Timeout:
-                    # logger.info(f"{parsed.scheme + '://' + parsed.netloc + '/robots.txt'} took too long to response.")
                     resp = ""
-                except Exception as e:
-                    # logger.error(f"Unknown exception in robots.txt: {e}")
+                except:
                     resp = ""
                 if resp.status != 200:
                     resp = ""
                 robot = RobotFileParser()
                 try:
                     robot.parse(resp.raw_response.content.decode().split("\n"))
-                except Exception as e:
-                    # logger.info(f"Robot failed to parse txt: {e}")
-                    # logger.info("Should be fine since I made the resp to be a str if robots.txt doesn't exist.")
+                except:
                     robot.parse("")
                 robottxt[parsed.netloc] = robot
             if robot.can_fetch("IR F19 63226723", url):
@@ -158,7 +151,7 @@ def is_valid(url):
     except TypeError:
         print("TypeError for ", parsed)
         raise
-    except Exception as e:
+    except:
         pass
     return False
 

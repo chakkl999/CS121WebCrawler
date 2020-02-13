@@ -27,6 +27,5 @@ class Worker(Thread):
                 scraped_urls = scraper(tbd_url, resp)
                 for scraped_url in scraped_urls:
                     self.frontier.add_url(scraped_url)
-                # self.logger.info(f"Found {len(scraped_urls)} from {tbd_url}")
             self.frontier.mark_url_complete(tbd_url)
             time.sleep(self.config.time_delay)

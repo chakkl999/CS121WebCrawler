@@ -100,7 +100,7 @@ def outputResult():
                  "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's",
                  "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you",
                  "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "img", "btn", "div",
-                 "px", "www", "com", "edu"}
+                 "px", "www", "com", "edu", "pdf", "org", "http"}
     with open("output/result.txt", "w") as f:
         f.write(f"There are {unique} unique pages found.\n")
         f.write(f"Longest page: {longestPage} -> {maxNumWords} words.\n")
@@ -121,6 +121,7 @@ def outputResult():
         print("Subdomain: ")
         outputSubDomain(domain['ics.uci.edu'][1])
         outputSubDomain(domain['ics.uci.edu'][1], f)
+    print(domain)
 
 
 if __name__ == "__main__":
