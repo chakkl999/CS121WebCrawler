@@ -99,7 +99,8 @@ def outputResult():
                  "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't", "we", "we'd",
                  "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's", "where", "where's",
                  "which", "while", "who", "who's", "whom", "why", "why's", "with", "won't", "would", "wouldn't", "you",
-                 "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "img", "btn", "div", "px"}
+                 "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "img", "btn", "div",
+                 "px", "www", "com", "edu"}
     with open("output/result.txt", "w") as f:
         f.write(f"There are {unique} unique pages found.\n")
         f.write(f"Longest page: {longestPage} -> {maxNumWords} words.\n")

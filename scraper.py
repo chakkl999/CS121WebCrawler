@@ -209,12 +209,9 @@ def computeWordFrequencies(tokens: list) -> dict:
 def tokenize(text: str):
     leading = re.compile("^[^a-zA-Z0-9]*")
     trailing = re.compile("[^a-zA-Z0-9]*$")
-    spliting = re.compile("[^a-zA-Z0-9']")
-    tokens = list(filter(None, spliting.split(leading.sub("", trailing.sub("", text.lower())))))
-    for i in range(len(tokens)):
-        if tokens[i].endswith("'"):
-            tokens[i] = tokens[i][:-1]
-    return tokens
+    splitting = re.compile("[^a-zA-Z0-9']")
+    tokens = list(filter(None, splitting.split(leading.sub("", trailing.sub("", text.lower())))))
+    return [t.strip("'") for t in tokens]
 
 def removejunk(text: str):
     if(text.strip() == ''):
